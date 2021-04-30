@@ -36,7 +36,7 @@ churn$StreamingMovies <- as.factor(churn$StreamingMovies)
 churn$PaperlessBilling <- as.factor(churn$PaperlessBilling)
 churn$PaymentMethod <- as.factor(churn$PaymentMethod)
 
-#Convert Double Type Variables Into Numeric Yype and Store Them in a Variable as a Data Frame
+#Convert Double Type Variables Into Numeric Type and Store Them in a Variable as a Data Frame
 num_columns <- c("Tenure", "MonthlyCharge")
 churn[num_columns] <- sapply(churn[num_columns], as.numeric)
 data_int <- churn[,c("Tenure", "MonthlyCharge")]
@@ -56,12 +56,45 @@ churn$Tenure_Grouped[churn$Tenure_Grouped > 60 & churn$Tenure_Grouped <= 72] <- 
 churn$Tenure_Grouped <- as.factor(churn$Tenure_Grouped)
 
 #Check to Ensure Tenure_Grouped Has Been Added to Dataset
-str(Churn)
+str(churn)
+
+#Remove Unnecessary Variables
+churn$CaseOrder <- NULL
+churn$Customer_id <- NULL
+churn$Interaction <- NULL
+churn$UID <- NULL
+churn$City <- NULL
+churn$State <- NULL
+churn$County <- NULL
+churn$Zip <- NULL
+churn$Lat <- NULL
+churn$Lng <- NULL
+churn$Population <- NULL
+churn$TimeZone <- NULL
+churn$Job <- NULL
+churn$Children <- NULL
+churn$Age <- NULL
+churn$Income <- NULL
+churn$Email <- NULL
+churn$Outage_sec_perweek <- NULL
+churn$Yearly_equip_failure <- NULL
+churn$Contacts <- NULL
+churn$Item1 <- NULL
+churn$Item2 <- NULL
+churn$Item3 <- NULL
+churn$Item4 <- NULL
+churn$Item5 <- NULL
+churn$Item6 <- NULL
+churn$Item7 <- NULL
+churn$Item8 <- NULL
 
 #Analyze Numerical variables - Correlation Matrix - Bivariate
 numeric.var <- sapply(churn, is.numeric)
 corr.matrix <- cor(churn[,numeric.var])
 corrplot(corr.matrix, main="\n\nCorrelation Plot for Numerical Variables", method="number")
+
+#Remove Tenure
+churn$Tenure <- NULL
 
 #Analyze Categorical variables - Bar Plots - Univariate
 p1 <- ggplot(churn, aes(x=Gender)) + ggtitle("Gender") + xlab("Gender") +
@@ -110,36 +143,6 @@ p19 <- ggplot(churn, aes(x=Tenure_Grouped)) + ggtitle("Tenure_Grouped") + xlab("
   geom_bar(aes(y = 100*(..count..)/sum(..count..)), width = 0.5) + ylab("Percentage") + coord_flip() + theme_minimal()
 grid.arrange (p14, p15, p16, p17, p18, p19, ncol=2)
 
-#Remove Unnecessary Variables
-churn$CaseOrder <- NULL
-churn$Customer_id <- NULL
-churn$Interaction <- NULL
-churn$UID <- NULL
-churn$City <- NULL
-churn$State <- NULL
-churn$County <- NULL
-churn$Zip <- NULL
-churn$Lat <- NULL
-churn$Lng <- NULL
-churn$Population <- NULL
-churn$TimeZone <- NULL
-churn$Job <- NULL
-churn$Children <- NULL
-churn$Age <- NULL
-churn$Income <- NULL
-churn$Email <- NULL
-churn$Outage_sec_perweek <- NULL
-churn$Yearly_equip_failure <- NULL
-churn$Contacts <- NULL
-churn$Tenure <- NULL
-churn$Item1 <- NULL
-churn$Item2 <- NULL
-churn$Item3 <- NULL
-churn$Item4 <- NULL
-churn$Item5 <- NULL
-churn$Item6 <- NULL
-churn$Item7 <- NULL
-churn$Item8 <- NULL
 
 #Check to Ensure All Unecessary Columns Have Been Removed From Dataset
 str(churn)
@@ -210,6 +213,7 @@ print(rfModel_new)
 pred_rf_new <- predict(rfModel_new, testing)
 table(Predicted = pred_rf_new, Actual = testing$Churn)
 
-#Random Forrest Feature Importance
+#Random Forest Feature Importance
 varImpPlot(rfModel_new, sort=T, n.var = 10, main = 'Top 10 Feature Importance')
 
+write.csv(churn, "churn_prepared.csv")
