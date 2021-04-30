@@ -208,7 +208,7 @@ print(rfModel_new)
 
 #Random Forest Prediction and Confusion Matrix Secondary Model
 pred_rf_new <- predict(rfModel_new, testing)
-caret::confusionMatrix(pred_rf_new, testing$Churn)
+table(Predicted = pred_rf_new, Actual = testing$Churn)
 
 #Random Forrest Feature Importance
 varImpPlot(rfModel_new, sort=T, n.var = 10, main = 'Top 10 Feature Importance')
